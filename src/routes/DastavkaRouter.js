@@ -1,13 +1,13 @@
 const express = require('express');
 const multer = require('multer');
 const mongoose = require('mongoose');
-const Dastavka = require('../models/DastavkaModels'); // Ensure correct model import
+const Dastavka = require('../models/DastavkaModels');
 
 const router = express.Router();
 
 const storage = multer.diskStorage({
     destination(req, file, cb) {
-        cb(null, 'uploads/dastavka'); // Set a single destination for all file types
+        cb(null, 'uploads/dastavka'); 
     },
     filename(req, file, cb) {
         const timestamp = Date.now();
@@ -17,8 +17,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Create a new Dastavka entry
-// CREATE Product
+
 router.post('/create', upload.fields([{ name: 'main_images', maxCount: 1 }, { name: 'all_images', maxCount: 5 }, { name: 'product_info_pdf', maxCount: 1 }]), async (req, res) => {
     const { name, category, rating, price, volume, description, discount_price, promotion, stock, ruler, oils_type, fidbek } = req.body;
     const main_images = req.files['main_images'] ? req.files['main_images'].map(file => file.path) : [];
@@ -54,7 +53,6 @@ router.post('/create', upload.fields([{ name: 'main_images', maxCount: 1 }, { na
   });
   
 
-// Get all Dastavka entries
 router.get('/', async (req, res) => {
     try {
         const dastavkaList = await Dastavka.find();
@@ -65,7 +63,6 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Update a Dastavka entry by ID
 router.put('/:id', upload.fields([{ name: 'images', maxCount: 5 }]), async (req, res) => {
     const { id } = req.params;
     const { name, description } = req.body;
@@ -88,7 +85,6 @@ router.put('/:id', upload.fields([{ name: 'images', maxCount: 5 }]), async (req,
     }
 });
 
-// Delete a Dastavka entry by ID
 router.delete('/:id', async (req, res) => {
     const { id } = req.params;
     try {
